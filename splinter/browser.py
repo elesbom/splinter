@@ -7,6 +7,6 @@ _DRIVERS = {'webdriver.firefox': FirefoxWebDriver,
             'webdriver.chrome': ChromeWebDriver}
 
 
-def Browser(driver_name='webdriver.firefox'):
+def Browser(driver_name='webdriver.firefox', **kwargs):
     driver = _DRIVERS[driver_name]
-    return driver()
+    return driver(**kwargs)
