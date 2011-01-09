@@ -2,7 +2,7 @@ all: test
 
 clean:
 	@find . -name "*.pyc" -delete
-	
+
 dependencies: specloud coverage selenium flask shoulddsl lxml zopetestbrowser
 
 specloud:
