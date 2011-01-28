@@ -1,7 +1,7 @@
 all: test
 
 clean:
-	@find . -name "*.pyc" -delete
+	@find . -name \*.pyc -exec rm -f {} \;
 	
 dependencies: specloud coverage selenium flask shoulddsl lxml zopetestbrowser
 
