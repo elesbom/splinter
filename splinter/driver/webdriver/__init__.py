@@ -10,7 +10,7 @@ class BaseWebDriver(DriverAPI):
 
     @property
     def title(self):
-        return self.driver.title
+        return self.driver.get_title()
 
     @property
     def html(self):
@@ -18,7 +18,7 @@ class BaseWebDriver(DriverAPI):
 
     @property
     def url(self):
-        return self.driver.current_url
+        return self.driver.get_current_url()
 
     def visit(self, url):
         self.driver.get(url)
@@ -28,7 +28,7 @@ class BaseWebDriver(DriverAPI):
 
     def evaluate_script(self, script):
         return self.driver.execute_script("return %s" % script)
-    
+
     def find_option_by_value(self, value):
         return self.find_by_xpath('//option[@value="%s"]' % value)
 
@@ -77,7 +77,7 @@ class BaseWebDriver(DriverAPI):
         field.uncheck()
 
     def select(self, name, value):
-        self.find_by_xpath('//select[@name="%s"]/option[@value="%s"]' % (name, value)).first._element.select()
+        self.find_by_xpath('//select[@name="%s"]/option[@value="%s"]' % (name, value)).first._element.set_selected()
 
     def quit(self):
         self.driver.quit()
@@ -90,9 +90,9 @@ class WebDriverElement(ElementAPI):
 
     def _get_value(self):
         try:
-            return self._element.value
+            return self._element.get_value()
         except InvalidElementStateException:
-            return self._element.text
+            return self._element.get_text()
 
     def _set_value(self, value):
         self._element.clear()
@@ -102,7 +102,7 @@ class WebDriverElement(ElementAPI):
 
     @property
     def text(self):
-        return self._element.text
+        return self._element.get_text()
 
     def click(self):
         self._element.click()
