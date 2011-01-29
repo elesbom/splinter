@@ -10,7 +10,7 @@ class BaseBrowserTests(object):
         "should be able to visit, get title and quit"
         title = self.browser.title
         title |should| equal_to('Example Title')
-    
+
     def test_should_have_html(self):
         "should have access to the html"
         html = self.browser.html
