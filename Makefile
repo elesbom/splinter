@@ -30,3 +30,6 @@ test: dependencies clean
 	@echo "Running all tests..."
 	specloud --nocapture --with-coverage --cover-erase --cover-inclusive --cover-package=splinter tests
 
+wintest: dependencies clean
+	@echo "Running all tests..."
+	nosetests --nocapture --with-coverage --cover-erase --cover-inclusive --cover-package=splinter tests
