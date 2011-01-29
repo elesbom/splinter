@@ -2,8 +2,8 @@ all: test
 
 clean:
 	@find . -name \*.pyc -exec rm -f {} \;
-	
-dependencies: specloud coverage selenium flask shoulddsl lxml zopetestbrowser
+
+dependencies: specloud coverage selenium flask shoulddsl lxml zopetestbrowser unittest2
 
 specloud:
 	@python -c 'import specloud' 2>/dev/null || pip install --no-deps specloud -r http://github.com/hugobr/specloud/raw/master/requirements.txt
@@ -22,6 +22,9 @@ shoulddsl:
 
 lxml:
 	@python -c 'import lxml' 2>/dev/null || pip install lxml
+
+unittest2:
+	@python -c 'import unittest2' 2>/dev/null || pip install unittest2
 
 zopetestbrowser:
 	@python -c 'import zope.testbrowser' 2>/dev/null || pip install zope.testbrowser
