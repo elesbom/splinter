@@ -165,7 +165,10 @@ class WebDriverElement(ElementAPI):
 
     @property
     def css_selector(self):
-        return '#%s' % self['id']
+        if self['id']:
+            return '#%s' % self['id']
+
+        return '%s.%s' % (self._element.tag_name, self['class'])
 
     @property
     def text(self):

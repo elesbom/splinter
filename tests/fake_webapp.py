@@ -43,7 +43,7 @@ EXAMPLE_HTML = """\
     <h1 id="firstheader">Example Last Header</h1>
     <div class="menu">
         <ul>
-            <li id="first-menu-item"><a href="#">First menu item</a></li>
+            <li id="first-menu-item" class="first-menu-item"><a href="#">First menu item</a></li>
             <li><a href="#">Second menu item</a></li>
             <li><a href="#">Third menu item</a></li>
             <li class="last-menu-item">Last menu item</li>
