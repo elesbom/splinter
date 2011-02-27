@@ -164,6 +164,10 @@ class WebDriverElement(ElementAPI):
     value = property(_get_value, _set_value)
 
     @property
+    def css_selector(self):
+        return '#%s' % self['id']
+
+    @property
     def text(self):
         return self._element.text
 

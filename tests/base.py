@@ -371,6 +371,11 @@ class WebDriverTests(BaseBrowserTests):
         self.browser.find_by_css_selector('.remove-async-element').first.click()
         self.browser.is_element_not_present_by_name('async-input') | should | be(True)
 
+    def test_webdriverelement_should_know_its_css_selector_by_id(self):
+        "WebDriverElement should know its CSS selector when it has an ID"
+        element = self.browser.find_by_css_selector('li#first-menu-item').first
+        element.css_selector |should| equal_to("#first-menu-item")
+
     def test_should_trigger_mouseover_event_on_elements(self):
         self.browser.find_by_css_selector('.add-element-mouseover').first.mouseover()
         self.browser.is_element_present_by_id('what-is-your-name') | should | be(True)

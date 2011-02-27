@@ -41,6 +41,14 @@ EXAMPLE_HTML = """\
   <body>
     <h1 id="firstheader">Example Header</h1>
     <h1 id="firstheader">Example Last Header</h1>
+    <div class="menu">
+        <ul>
+            <li id="first-menu-item"><a href="#">First menu item</a></li>
+            <li><a href="#">Second menu item</a></li>
+            <li><a href="#">Third menu item</a></li>
+            <li class="last-menu-item">Last menu item</li>
+        </ul>
+    </div>
     <form action="name" method="GET">
         <label for="query">Query</label>
         <input type="text" name="query" value="default value" />
@@ -81,7 +89,7 @@ def index():
 @app.route('/name', methods=['GET'])
 def get_name():
     return "My name is: Master Splinter"
-    
+
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
@@ -95,7 +103,7 @@ def upload_file():
 @app.route('/foo')
 def foo():
     return "BAR!"
-    
+
 class Env(object):
     pass
 
