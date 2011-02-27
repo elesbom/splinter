@@ -388,3 +388,13 @@ class WebDriverTests(BaseBrowserTests):
         self.browser.find_by_css_selector('.add-element-mouseover').first.mouseover()
         self.browser.is_element_present_by_id('what-is-your-name') | should | be(True)
         self.browser.is_element_present_by_css_selector('.over-label') | should | be(True)
+
+    def test_should_trigger_mouseout_event_on_element(self):
+        wait_time = self.browser.wait_time
+        self.browser.wait_time = 0
+
+        self.browser.find_by_css_selector('.add-element-mouseover').first.mouseout()
+        self.browser.is_element_present_by_id('what-is-your-name') | should | be(False)
+        self.browser.is_element_present_by_css_selector('.over-label') | should | be(False)
+
+        self.browser.wait_time = wait_time

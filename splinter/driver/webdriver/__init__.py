@@ -179,8 +179,14 @@ class WebDriverElement(ElementAPI):
     def text(self):
         return self._element.text
 
+    def _trigger_event(self, event_name):
+        self.browser.execute_script('$("%s").%s();' % (self.css_selector, event_name))
+
     def mouseover(self):
-        self.browser.execute_script('$("%s").mouseover();' % self.css_selector)
+        self._trigger_event('mouseover')
+
+    def mouseout(self):
+        self._trigger_event('mouseout')
 
     def click(self):
         self._element.click()
