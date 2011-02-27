@@ -370,3 +370,8 @@ class WebDriverTests(BaseBrowserTests):
         self.browser.is_element_present_by_css_selector('.async-element')
         self.browser.find_by_css_selector('.remove-async-element').first.click()
         self.browser.is_element_not_present_by_name('async-input') | should | be(True)
+
+    def test_should_trigger_mouseover_event_on_elements(self):
+        self.browser.find_by_css_selector('.add-element-mouseover').first.mouseover()
+        self.browser.is_element_present_by_id('what-is-your-name') | should | be(True)
+        self.browser.is_element_present_by_css_selector('.over-label') | should | be(True)
