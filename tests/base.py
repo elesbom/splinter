@@ -177,7 +177,7 @@ class BaseBrowserTests(object):
         link['href'] |should| equal_to('http://example.com')
 
     def test_can_change_field_value(self):
-        "should provide a away to change field value"
+        "should provide a way to change field value"
         self.browser.fill('query', 'new query')
         value = self.browser.find_by_name('query').first.value
         value |should| equal_to('new query')
