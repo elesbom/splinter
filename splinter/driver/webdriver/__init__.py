@@ -102,23 +102,23 @@ class BaseWebDriver(DriverAPI):
         return self.find_by_xpath('//a[@href="%s"]' % href)
 
     def find_link_by_text(self, text):
-        return ElementList([self.element_class(element) for element in self.driver.find_elements_by_link_text(text)])
+        return ElementList([self.element_class(element, self) for element in self.driver.find_elements_by_link_text(text)])
 
     def find_by_css_selector(self, css_selector):
         selector = CSSSelector(css_selector)
-        return ElementList([self.element_class(element) for element in self.driver.find_elements_by_xpath(selector.path)])
+        return ElementList([self.element_class(element, self) for element in self.driver.find_elements_by_xpath(selector.path)])
 
     def find_by_xpath(self, xpath):
-        return ElementList([self.element_class(element) for element in self.driver.find_elements_by_xpath(xpath)])
+        return ElementList([self.element_class(element, self) for element in self.driver.find_elements_by_xpath(xpath)])
 
     def find_by_name(self, name):
-        return ElementList([self.element_class(element) for element in self.driver.find_elements_by_name(name)])
+        return ElementList([self.element_class(element, self) for element in self.driver.find_elements_by_name(name)])
 
     def find_by_id(self, id):
-        return ElementList([self.element_class(self.driver.find_element_by_id(id))])
+        return ElementList([self.element_class(self.driver.find_element_by_id(id), self)])
 
     def find_by_tag(self, tag):
-        return ElementList([self.element_class(element) for element in self.driver.find_elements_by_tag_name(tag)])
+        return ElementList([self.element_class(element, self) for element in self.driver.find_elements_by_tag_name(tag)])
 
     def fill_in(self, name, value):
         field = self.find_by_name(name).first
@@ -148,8 +148,10 @@ class BaseWebDriver(DriverAPI):
 
 class WebDriverElement(ElementAPI):
 
-    def __init__(self, element):
+    def __init__(self, element, browser):
         self._element = element
+        self.browser = browser
+        self._css_selector = None
 
     def _get_value(self):
         try:
@@ -165,14 +167,20 @@ class WebDriverElement(ElementAPI):
 
     @property
     def css_selector(self):
-        if self['id']:
-            return '#%s' % self['id']
+        if not self._css_selector:
+            if self['id']:
+                self._css_selector = '#%s' % self['id']
+            else:
+                self._css_selector = '%s.%s' % (self._element.tag_name, self['class'])
 
-        return '%s.%s' % (self._element.tag_name, self['class'])
+        return self._css_selector
 
     @property
     def text(self):
         return self._element.text
+
+    def mouseover(self):
+        self.browser.execute_script('$("%s").mouseover();' % self.css_selector)
 
     def click(self):
         self._element.click()

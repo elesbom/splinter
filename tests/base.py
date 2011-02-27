@@ -385,7 +385,6 @@ class WebDriverTests(BaseBrowserTests):
         element.css_selector |should| equal_to("div.menu")
 
     def test_should_trigger_mouseover_event_on_elements(self):
-        "COMENTED TEST, WAITING FOR THE FEATURE"
-        #self.browser.find_by_css_selector('.add-element-mouseover').first.mouseover()
-        #self.browser.is_element_present_by_id('what-is-your-name') | should | be(True)
-        #self.browser.is_element_present_by_css_selector('.over-label') | should | be(True)
+        self.browser.find_by_css_selector('.add-element-mouseover').first.mouseover()
+        self.browser.is_element_present_by_id('what-is-your-name') | should | be(True)
+        self.browser.is_element_present_by_css_selector('.over-label') | should | be(True)
