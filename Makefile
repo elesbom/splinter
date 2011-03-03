@@ -2,7 +2,7 @@ all: test
 
 clean:
 	@find . -name "*.pyc" -delete
-	
+
 dependencies: specloud coverage selenium flask shoulddsl lxml zopetestbrowser
 
 specloud:
@@ -28,5 +28,5 @@ zopetestbrowser:
 
 test: dependencies clean
 	@echo "Running all tests..."
-	specloud --nocapture --with-coverage --cover-erase --cover-inclusive --cover-package=splinter tests
+	@specloud --nocapture --with-coverage --cover-erase --cover-inclusive --cover-package=splinter tests
 

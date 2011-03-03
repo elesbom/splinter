@@ -1,7 +1,7 @@
 import unittest
 from splinter.browser import Browser
 from base import BaseBrowserTests
-from fake_webapp import EXAMPLE_APP
+from splinter_server import EXAMPLE_APP
 from should_dsl import should
 
 import os

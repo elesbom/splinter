@@ -1,6 +1,5 @@
 from setuptools import setup, find_packages
 
-
 README = open('README.rst').read()
 
 setup(name='splinter',
@@ -13,5 +12,5 @@ setup(name='splinter',
       include_package_data=True,
       test_suite='nose.collector',
       install_requires=['selenium==2.0b2', 'zope.testbrowser', 'lxml'],
-      tests_require=['nose', 'coverage', 'ludibrio', 'flask'],
+      tests_require=['nose', 'coverage', 'ludibrio', 'tornado'],
       )

@@ -1,7 +1,7 @@
 import unittest
 from should_dsl import should
 from splinter.browser import Browser
-from fake_webapp import EXAMPLE_APP
+from splinter_server import EXAMPLE_APP
 from base import WebDriverTests
 
 class ChromeBrowserTest(WebDriverTests, unittest.TestCase):

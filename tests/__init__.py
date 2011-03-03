@@ -1,7 +1,8 @@
-from fake_webapp import start_server, stop_server
+from splinter_server import MockServer
 
+server = MockServer()
 def setup():
-    start_server()
+    server.start()
 
 def teardown():
-    stop_server()
+    server.stop()
