@@ -61,7 +61,12 @@ class NameHandler(tornado.web.RequestHandler):
 
 class UploadHandler(tornado.web.RequestHandler):
     def post(self):
-        data = self.request.files['file']
+        self.set_header("Content-Type", "text/plain")
+        data = self.request.files.get('file', [None])[0]
+        if not data:
+            self.write('No file provided through name "file"')
+            return
+
         buf = [
             u'Content-type: %(content_type)s' % data,
             u'File content: %(body)s' % data,
@@ -108,3 +113,15 @@ class MockServer(object):
             os.kill(self.process.pid, 9)
         except OSError:
             self.process.terminate()
+
+if __name__ == '__main__':
+    s = MockServer()
+    try:
+        s.start()
+        raw_input("server running, type enter to stop\n")
+    except KeyboardInterrupt:
+        print
+        print "Bye"
+
+
+    s.stop()
