@@ -384,6 +384,11 @@ class WebDriverTests(BaseBrowserTests):
         element = self.browser.find_by_xpath('//div[@class="menu"]').first
         element.css_selector |should| equal_to("div.menu")
 
+    def test_webdriverelement_should_know_its_css_selector_on_complex_structures(self):
+        "WebDriverElement should know its CSS selector even on more complex structures"
+        element = self.browser.find_link_by_text("Second menu item").first
+        element.css_selector |should| equal_to("div.menu > ul > li > a")
+
     def test_should_trigger_mouseover_event_on_elements(self):
         self.browser.find_by_css_selector('.add-element-mouseover').first.mouseover()
         self.browser.is_element_present_by_id('what-is-your-name') | should | be(True)
