@@ -1,14 +1,60 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import time
+import logging
+import subprocess
+
+from tempfile import TemporaryFile
 from lxml.cssselect import CSSSelector
+from selenium.common.exceptions import WebDriverException, NoSuchElementException
+from selenium.webdriver.firefox import firefox_profile
+
 from splinter.driver import DriverAPI, ElementAPI
 from splinter.element_list import ElementList
-from selenium.webdriver.common.exceptions import WebDriverException, NoSuchElementException
-
-import time
 
 class BaseWebDriver(DriverAPI):
+    old_popen = subprocess.Popen
 
-    def __init__(self):
-        self.wait_time = 2
+    def __init__(self, wait_time=2):
+        self.wait_time = wait_time
+
+    def _patch_subprocess(self):
+        loggers_to_silence = [
+            'selenium.webdriver.firefox.utils',
+            'selenium.webdriver.firefox.firefoxlauncher',
+            'selenium.webdriver.firefox.firefox_profile',
+            'selenium.webdriver.remote.utils',
+            'selenium.webdriver.remote.remote_connection',
+            'addons.xpi',
+            'webdriver.ExtensionConnection',
+        ]
+
+        class MutedHandler(logging.Handler):
+            def emit(self, record):
+                pass
+
+        for name in loggers_to_silence:
+            logger = logging.getLogger(name)
+            logger.addHandler(MutedHandler())
+            logger.setLevel(99999)
+
+        # selenium is such a verbose guy let's make it open the
+        # browser without showing all the meaningless output
+        def MyPopen(*args, **kw):
+            kw['stdout'] = TemporaryFile()
+            kw['stderr'] = TemporaryFile()
+            kw['close_fds'] = True
+            return self.old_popen(*args, **kw)
+
+        subprocess.Popen = MyPopen
+
+        # also patching firefox profile in order to NOT produce output
+        firefox_profile.FirefoxProfile. \
+            DEFAULT_PREFERENCES['extensions.logging.enabled'] = "false"
+
+    def _unpatch_subprocess(self):
+        # cleaning up the house
+        subprocess.Popen = self.old_popen
 
     @property
     def title(self):
@@ -31,8 +77,9 @@ class BaseWebDriver(DriverAPI):
     def evaluate_script(self, script):
         return self.driver.execute_script("return %s" % script)
 
-    def is_element_present(self, finder, selector):
-        end_time = time.time() + self.wait_time
+    def is_element_present(self, finder, selector, wait_time=None):
+        wait_time = wait_time or self.wait_time
+        end_time = time.time() + wait_time
 
         while time.time() < end_time:
             if finder(selector):
@@ -47,8 +94,8 @@ class BaseWebDriver(DriverAPI):
                 return True
         return False
 
-    def is_element_present_by_css_selector(self, css_selector):
-        return self.is_element_present(self.find_by_css_selector, css_selector)
+    def is_element_present_by_css_selector(self, css_selector, wait_time=None):
+        return self.is_element_present(self.find_by_css_selector, css_selector, wait_time)
 
     def is_element_not_present_by_css_selector(self, css_selector):
         return self.is_element_not_present(self.find_by_css_selector, css_selector)
@@ -119,6 +166,15 @@ class BaseWebDriver(DriverAPI):
 
     def find_by_tag(self, tag):
         return ElementList([self.element_class(element, self) for element in self.driver.find_elements_by_tag_name(tag)])
+
+    def wait_for_element(self, selector, timeout=5, interval=0.5):
+        end_time = time.time() + timeout
+        while time.time() < end_time:
+            result = self.find_by_css_selector(selector)
+            if result:
+                return True
+            time.sleep(interval)
+        return False
 
     def fill_in(self, name, value):
         field = self.find_by_name(name).first

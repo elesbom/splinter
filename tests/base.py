@@ -1,5 +1,7 @@
 from should_dsl import should, should_not
 from fake_webapp import EXAMPLE_APP
+from splinter.element_list import ElementDoesNotExist
+from nose.tools import raises
 
 class BaseBrowserTests(object):
 
@@ -300,6 +302,11 @@ class WebDriverTests(BaseBrowserTests):
         self.browser.find_by_css_selector('.add-async-element').first.click()
         self.browser.is_element_present_by_css_selector('.async-element') | should | be(True)
 
+    def test_is_element_present_by_css_selector_using_a_custom_wait_time(self):
+        "should is element present by css selector verify if element is present using a custom wait time"
+        self.browser.find_by_css_selector('.add-async-element').first.click()
+        self.browser.is_element_present_by_css_selector('.async-element2', wait_time=3) | should | be(True)
+
     def test_is_element_present_by_css_selector_returns_false_if_element_is_not_present(self):
         "should is element present by css selector returns False if element is not present"
         self.browser.is_element_present_by_css_selector('.async-elementzz') | should | be(False)
@@ -403,3 +410,15 @@ class WebDriverTests(BaseBrowserTests):
         self.browser.is_element_present_by_css_selector('.over-label') | should | be(False)
 
         self.browser.wait_time = wait_time
+
+    @raises(ElementDoesNotExist)
+    def test_element_query_should_raises_when_element_first_doest_exists(self):
+        self.browser.find_by_css_selector('.element-that-dont-exists').first
+
+    @raises(ElementDoesNotExist)
+    def test_element_list_raises_when_element_last_does_not_exists(self):
+        self.browser.find_by_css_selector('.element-that-dont-exists').last
+
+    @raises(ElementDoesNotExist)
+    def test_element_list_raises_when_element_does_not_exists(self):
+        self.browser.find_by_css_selector('.element-that-dont-exists')[2]
